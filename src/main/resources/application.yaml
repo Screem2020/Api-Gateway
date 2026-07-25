@@ -1,3 +1,22 @@
 spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+          - id: flow-manager
+            uri: lb://FLOW_MANAGER
+            predicates:
+              - Path=/api/v1/**
+
   application:
     name: Api-Gateway
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 9090
