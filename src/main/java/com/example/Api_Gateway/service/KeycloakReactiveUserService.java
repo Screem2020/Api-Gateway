@@ -23,26 +23,14 @@ public class KeycloakReactiveUserService
             new OidcReactiveOAuth2UserService();
     @Override
     public Mono<OidcUser> loadUser(OidcUserRequest userRequest) {
-
-        return delegate.loadUser(userRequest)
-                .map(oidcUser -> {
-
+        return delegate.loadUser(userRequest).map(oidcUser -> {
                     Set<GrantedAuthority> authorities =
                             new HashSet<>(oidcUser.getAuthorities());
-
-
                     Map<String,Object> realmAccess =
                             oidcUser.getClaim("realm_access");
-
-
                     if (realmAccess != null) {
-
-                        List<String> roles =
-                                (List<String>) realmAccess.get("roles");
-
-
+                        List<String> roles = (List<String>) realmAccess.get("roles");
                         if (roles != null) {
-
                             roles.forEach(role ->
                                     authorities.add(
                                             new SimpleGrantedAuthority(
@@ -52,8 +40,6 @@ public class KeycloakReactiveUserService
                             );
                         }
                     }
-
-
                     return new DefaultOidcUser(
                             authorities,
                             oidcUser.getIdToken(),
