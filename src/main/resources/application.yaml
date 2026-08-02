@@ -27,6 +27,8 @@ spring:
             uri: lb://FLOW-MANAGER
             predicates:
               - Path=/api/v1/flow-manager/**
+            filters:
+              - AddRequestHeader=X-User-Login, user-from-token
 
   application:
     name: Api-Gateway
@@ -39,6 +41,3 @@ eureka:
 
 server:
   port: 9090
-logging:
-  level:
-    org.springframework.security: TRACE
