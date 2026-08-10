@@ -27,8 +27,6 @@ spring:
             uri: lb://FLOW-MANAGER
             predicates:
               - Path=/api/v1/flow-manager/**
-            filters:
-              - AddRequestHeader=X-User-Login, user-from-token
 
   application:
     name: Api-Gateway
