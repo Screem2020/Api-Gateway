@@ -31,18 +31,15 @@ public class KeycloakReactiveUserService
                     new HashSet<>(oidcUser.getAuthorities());
             Map<String, Object> realmAccess =
                     oidcUser.getClaim("realm_access");
-            if (realmAccess instanceof List<?> list) {
-                List<String> roles = list.stream()
-                        .filter(String.class::isInstance)
-                        .map(String.class::cast)
-                        .toList();
-                roles.forEach(role ->
-                        authorities.add(
-                                new SimpleGrantedAuthority(
-                                        "ROLE_" + role
-                                )
-                        )
-                );
+            if (realmAccess != null) {
+                Object rolesObject = realmAccess.get("roles");
+                if (rolesObject instanceof List<?> roles) {
+                    roles.stream()
+                            .filter(String.class::isInstance)
+                            .map(String.class::cast)
+                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                            .forEach(authorities::add);
+                }
             }
             log.info("realm access: {} {} {}", authorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
             return new DefaultOidcUser(
