@@ -1,3 +1,41 @@
 spring:
+  security:
+    oauth2:
+
+      client:
+        registration:
+          keycloak:
+            client-id: gateway-api
+            client-secret: O8zbfeJRfP43BAsTam1NT5P9FD28QLYx
+            authorization-grant-type: authorization_code
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8180/realms/backend-dev
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/backend-dev
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+          - id: flow-manager
+            uri: lb://FLOW-MANAGER
+            predicates:
+              - Path=/api/v1/flow-manager/**
+
   application:
     name: Api-Gateway
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 9090
